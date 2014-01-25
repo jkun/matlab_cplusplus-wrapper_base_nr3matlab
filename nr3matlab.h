@@ -23,6 +23,7 @@
 #include <fcntl.h>
 #include <string.h>
 #include <ctype.h>
+#include<string>
 using namespace std;
 
 // macro-like inline functions
@@ -698,3 +699,17 @@ typedef NRmatrix<Bool> MatBool, MatBool_O, MatBool_IO;
 
 typedef const NRMat3d<Doub> Mat3DDoub_I;
 typedef NRMat3d<Doub> Mat3DDoub, Mat3DDoub_O, Mat3DDoub_IO;
+
+string MatString(const mxArray *prhs){
+	char *input_buf;
+	if(mxIsChar(prhs)!=1)
+		mexPrintf("Input must be a string");
+	if(mxGetM(prhs)!=1)
+		mexPrintf("Input must be a row vector");
+	int buflen=(mxGetM(prhs))*(mxGetN(prhs))+1;
+//	input_buf=mxCalloc(buflen,sizeof(char));
+//	mxGetString(prhs,input_buf,buflen);
+	//string restr=input_buf;
+	string restr="aaaa";
+	return restr;
+}
