@@ -24,6 +24,7 @@
 #include <string.h>
 #include <ctype.h>
 #include<string>
+#include<sstream>
 using namespace std;
 
 // macro-like inline functions
@@ -707,9 +708,39 @@ string MatString(const mxArray *prhs){
 	if(mxGetM(prhs)!=1)
 		mexPrintf("Input must be a row vector");
 	int buflen=(mxGetM(prhs))*(mxGetN(prhs))+1;
-//	input_buf=mxCalloc(buflen,sizeof(char));
-//	mxGetString(prhs,input_buf,buflen);
-	//string restr=input_buf;
-	string restr="aaaa";
+	input_buf=(char *)mxCalloc(buflen,sizeof(char));
+	mxGetString(prhs,input_buf,buflen);
+	string restr=input_buf;
 	return restr;
 }
+class Mexoutput{
+public:
+	Mexoutput(){};
+	
+	Mexoutput& operator <<(string s){
+		mexPrintf("%s",s.c_str());
+		return *this;
+	}
+	Mexoutput& operator<< (double a){
+		mexPrintf("%lf",a);
+		return *this;
+	}
+	Mexoutput& operator<< (int a){
+		mexPrintf("%d",a);
+		return *this;
+	}
+	Mexoutput& operator<< (float a){
+		mexPrintf("%f",a);
+		return *this;
+	}
+	Mexoutput& operator<<(Mexoutput& (*op)(Mexoutput&)){
+		return (*op)(*this);
+	}
+	
+};
+Mexoutput& endl(Mexoutput& s){
+		mexPrintf("\n");
+		return s;
+	}
+Mexoutput mexoutput;
+#define cout mexoutput
